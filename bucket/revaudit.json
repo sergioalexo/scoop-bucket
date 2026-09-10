@@ -1,0 +1,54 @@
+{
+    "$schema": "https://raw.githubusercontent.com/ScoopInstaller/Scoop/master/schema.json",
+    "version": "1.0.0",
+    "description": "Audits released Onshape assemblies for drawing and release gaps and checks production-file (DXF/SAT/PDF/STEP) coverage against a shop folder.",
+    "homepage": "https://github.com/sergioalexo/revaudit",
+    "license": "GPL-3.0-only",
+    "depends": "python",
+    "url": "https://github.com/sergioalexo/revaudit/archive/refs/tags/v1.0.0.tar.gz",
+    "hash": "c55fe91701dcf03d35a8c54f3ca91bd0c43aac6066358d021f5e5221ca4afae3",
+    "extract_dir": "revaudit-1.0.0",
+    "bin": [
+        [
+            "revaudit.py",
+            "revaudit"
+        ],
+        [
+            "serve.py",
+            "revaudit-serve"
+        ],
+        [
+            "oauth_app.py",
+            "revaudit-oauth"
+        ],
+        [
+            "launch.bat",
+            "revaudit-launch"
+        ]
+    ],
+    "persist": [
+        ".env",
+        "revaudit.conf",
+        "drawings",
+        "reports"
+    ],
+    "post_install": [
+        "$e = \"$dir\\.env\"; $c = \"$dir\\revaudit.conf\"",
+        "if (-not (Get-Content $e -Raw -ErrorAction SilentlyContinue)) { Copy-Item \"$dir\\.env.example\" $e -Force }",
+        "if (-not (Get-Content $c -Raw -ErrorAction SilentlyContinue)) { Copy-Item \"$dir\\revaudit.conf.example\" $c -Force }",
+        "$t = Get-Content $c -Raw; if ($t -match '(?m)^\\s*report\\s*=\\s*\\r?$') { ($t -replace '(?m)^(\\s*report\\s*=).*', ('$1 ' + \"$persist_dir\\reports\")) | Set-Content -NoNewline $c }"
+    ],
+    "notes": [
+        "Put your Onshape API key in .env and set folders / port in revaudit.conf.",
+        "Both are kept across updates by Scoop.  Open the folder:  scoop prefix revaudit",
+        "Run:  revaudit-serve  (web UI)   |   revaudit <ASM number>  (CLI)"
+    ],
+    "checkver": {
+        "url": "https://api.github.com/repos/sergioalexo/revaudit/tags",
+        "regex": "\"name\":\\s*\"v([\\d.]+)\""
+    },
+    "autoupdate": {
+        "url": "https://github.com/sergioalexo/revaudit/archive/refs/tags/v$version.tar.gz",
+        "extract_dir": "revaudit-$version"
+    }
+}
