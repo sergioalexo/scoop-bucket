@@ -36,10 +36,14 @@
         "drawings",
         "reports"
     ],
+    "pre_install": [
+        "# Seed the config files BEFORE persist runs, otherwise Scoop persists them as directories.",
+        "if (-not (Test-Path \"$dir\\.env\")) { Copy-Item \"$dir\\.env.example\" \"$dir\\.env\" }",
+        "if (-not (Test-Path \"$dir\\revaudit.conf\")) { Copy-Item \"$dir\\revaudit.conf.example\" \"$dir\\revaudit.conf\" }"
+    ],
     "post_install": [
-        "$e = \"$dir\\.env\"; $c = \"$dir\\revaudit.conf\"",
-        "if (-not (Get-Content $e -Raw -ErrorAction SilentlyContinue)) { Copy-Item \"$dir\\.env.example\" $e -Force }",
-        "if (-not (Get-Content $c -Raw -ErrorAction SilentlyContinue)) { Copy-Item \"$dir\\revaudit.conf.example\" $c -Force }",
+        "# Persisted files exist now; point a still-blank `report =` at the persisted reports folder.",
+        "$c = \"$dir\\revaudit.conf\"",
         "$t = Get-Content $c -Raw; if ($t -match '(?m)^\\s*report\\s*=\\s*\\r?$') { ($t -replace '(?m)^(\\s*report\\s*=).*', ('$1 ' + \"$persist_dir\\reports\")) | Set-Content -NoNewline $c }"
     ],
     "notes": [
