@@ -24,6 +24,10 @@
         [
             "launch.bat",
             "revaudit-launch"
+        ],
+        [
+            "autostart.bat",
+            "revaudit-autostart"
         ]
     ],
     "persist": [
@@ -41,7 +45,8 @@
     "notes": [
         "Put your Onshape API key in .env and set folders / port in revaudit.conf.",
         "Both are kept across updates by Scoop.  Open the folder:  scoop prefix revaudit",
-        "Run:  revaudit-serve  (web UI)   |   revaudit <ASM number>  (CLI)"
+        "Run:  revaudit-serve  (web UI)   |   revaudit <ASM number>  (CLI)",
+        "Start with Windows:  revaudit-autostart on   (off / status)"
     ],
     "checkver": {
         "url": "https://api.github.com/repos/sergioalexo/revaudit/tags",
